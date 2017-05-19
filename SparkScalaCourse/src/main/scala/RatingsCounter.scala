@@ -14,10 +14,11 @@ object RatingsCounter {
     Logger.getLogger("org").setLevel(Level.ERROR)
         
     // Create a SparkContext using every core of the local machine, named RatingsCounter
+    // [*] means using all core of CPU
     val sc = new SparkContext("local[*]", "RatingsCounter")
    
     // Load up each line of the ratings data into an RDD
-    val lines = sc.textFile("../ml-100k/u.data")
+    val lines = sc.textFile("../data/ml-100k/u.data")
     
     // Convert each line to a string, split it out by tabs, and extract the third field.
     // (The file format is userID, movieID, rating, timestamp)
@@ -26,7 +27,7 @@ object RatingsCounter {
     // Count up how many times each value (rating) occurs
     val results = ratings.countByValue()
     
-    // Sort the resulting map of (rating, count) tuples
+    // Sort the resulting map of (rating, count) tuples by the first field
     val sortedResults = results.toSeq.sortBy(_._1)
     
     // Print each result on its own line.
